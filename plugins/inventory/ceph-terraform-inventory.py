@@ -98,21 +98,22 @@ def parse_ddcloud_server(resource, module_name):
     attrs = {
         "id": raw_attrs["id"],
         "name": raw_attrs["name"],
-        "primary_ip": raw_attrs["public_ipv4"],
-        "tags": tags,
 
-        # ansible
+        # Use private IPv4 address by default.
+        "primary_ip": raw_attrs["primary_adapter_ipv4"],
+
+        "private_ipv4": raw_attrs["primary_adapter_ipv4"],
+        "public_ipv4": raw_attrs["public_ipv4"],
+        "tags": tags,
+        "provider": "ddcloud",
+
+        # Use public IPv4 address for SSH, though.
         "ansible_ssh_host": tags.get(
             "ansible_ssh_host",
             raw_attrs["public_ipv4"]
         ),
         "ansible_ssh_port": int(tags.get("ansible_ssh_port", "22")),
         "ansible_ssh_user": tags.get("ansible_ssh_user", "root"),
-
-        # generic
-        "private_ipv4": raw_attrs["primary_adapter_ipv4"],
-        "public_ipv4": raw_attrs["public_ipv4"],
-        "provider": "ddcloud",
     }
 
     attrs.update({
