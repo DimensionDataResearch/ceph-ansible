@@ -114,6 +114,9 @@ def parse_ddcloud_server(resource, module_name):
         ),
         "ansible_ssh_port": int(tags.get("ansible_ssh_port", "22")),
         "ansible_ssh_user": tags.get("ansible_ssh_user", "root"),
+
+        # Ceph
+        "monitor_address": raw_attrs["primary_adapter_ipv4"]
     }
 
     attrs.update({
